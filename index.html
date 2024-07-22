@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <form action="">
+      <div>
+        <label for="name">Name: </label>
+        <input type="text" id="name" />
+      </div>
+      <div>
+        <label for="contact">Contact: </label>
+        <input type="text" id="contact" />
+      </div>
+      <div class="button-container">
+        <button class="create-account-btn" id="create-account">
+          Create Account
+        </button>
+        <button id="edit-account" style="display: none">Update Account</button>
+      </div>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Name</th>
+          <th>Contact</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <a href="./create_user/create_account.html">Add account</a>
+
+    <script src="./index.js"></script>
+  </body>
+</html>
