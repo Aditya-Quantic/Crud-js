@@ -94,11 +94,37 @@
 //   saveToLocal();
 //   showTable();
 // }
-let list = JSON.parse(localStorage.getItem("user"));
-console.log(list);
+let users = JSON.parse(localStorage.getItem("api"));
+let list = users;
+console.log(list, "mapbkl");
+const url = "http://localhost:4000/users";
 
 let editFlag = false;
 let editIndex = null;
+
+async function getData() {
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // Add any other headers as needed
+      },
+    });
+    console.log(response);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    console.log(JSON.stringify(json), "locak");
+    localStorage.setItem("api", JSON.stringify(json));
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+getData();
 
 function showData() {
   const tbody = document.querySelector("tbody");
@@ -135,8 +161,18 @@ function showData() {
 }
 
 showData();
-function saveData() {
-  localStorage.setItem("user", JSON.stringify(list));
+async function saveData(obj) {
+  console.log(obj);
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // Add any other headers as needed
+    },
+    body: JSON.stringify(obj),
+  });
+  console.log(response, "bc");
+  getData();
 }
 
 const createButton = document.querySelector(".create-account-btn");
@@ -164,7 +200,7 @@ function createUser(event) {
   obj.name = name.value.trim();
   obj.contact = contact.value.trim();
   list.push(obj);
-  saveData();
+  saveData(obj);
   showData();
   name.value = "";
   contact.value = "";
