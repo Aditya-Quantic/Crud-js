@@ -97,20 +97,37 @@
 let list = JSON.parse(localStorage.getItem("user"));
 console.log(list);
 
+let editFlag = false;
+let editIndex = null;
+
 function showData() {
   const tbody = document.querySelector("tbody");
   console.log(list, "list");
 
-  const tableData = list.map((item) => {
+  const tableData = list.map((item, index) => {
     return `<tr>
     <td>${item.id}</td>
-    <td>${item.name}</td>
-    <td>${item.contact}</td>
+    <td>${
+      editFlag && editIndex == index
+        ? `<input id='ip-${editIndex}' />`
+        : item.name
+    }</td>
+    <td>${
+      editFlag && editIndex == index
+        ? `<input id='mp-${editIndex}'/>`
+        : item.contact
+    }</td>
     <td>
-    <button onclick='editData(${JSON.stringify(item)})'>Edit</button>
-    <button onclick='deleteData(${JSON.stringify(
-      item.id
-    )})'>Delete</button></td>
+    <button onclick='${
+      editFlag && editIndex == index
+        ? `updateData(${item.id},${index})`
+        : `editData(${JSON.stringify(item)},${index})`
+    }'>${editFlag && editIndex == index ? "Save" : "Edit"}</button>
+    <button onclick='${
+      editFlag && editIndex == index
+        ? `cancelData()`
+        : `deleteData(${JSON.stringify(item.id)})`
+    }'>${editFlag && editIndex == index ? "Cancel" : "Delete"}</button></td>
     </tr>
     `;
   });
@@ -118,7 +135,6 @@ function showData() {
 }
 
 showData();
-
 function saveData() {
   localStorage.setItem("user", JSON.stringify(list));
 }
@@ -156,36 +172,58 @@ function createUser(event) {
 
 createButton.addEventListener("click", createUser);
 
-function editData(item) {
-  const createBtn = document.querySelector("#create-account");
-  const updateBtn = document.querySelector("#edit-account");
-  createBtn.style.display = "none";
-  updateBtn.style.display = "block";
-  let name = document.querySelector("#name");
-  let contact = document.querySelector("#contact");
-  console.log(item, "data");
-  name.value = item.name;
-  contact.value = item.contact;
-  updateBtn.addEventListener("click", (event) => updateData(event, item.id));
+function editData(item, index) {
+  editFlag = true;
+  editIndex = index;
+  console.log(item, index);
+  showData();
+  const editName = document.getElementById(`ip-${index}`);
+  const editContact = document.getElementById(`mp-${index}`);
+
+  editName.value = item.name;
+  editContact.value = item.contact;
+
+  // const createBtn = document.querySelector("#create-account");
+  // const updateBtn = document.querySelector("#edit-account");
+  // createBtn.style.display = "none";
+  // updateBtn.style.display = "block";
+  // let name = document.querySelector("#name");
+  // let contact = document.querySelector("#contact");
+  // console.log(item, "data");
+  // name.value = item.name;
+  // contact.value = item.contact;
+
+  // updateBtn.addEventListener("click", (event) =>
+  //   updateData(event, item.id, index)
+  // );
 }
 
-function updateData(event, id) {
-  event.preventDefault();
-  const name = document.querySelector("#name");
-  const contact = document.querySelector("#contact");
+function updateData(id, index) {
+  console.log("bojext", id, index);
+  // event.preventDefault();
+  // const name = document.querySelector("#name");
+  // const contact = document.querySelector("#contact");
+  const editName = document.getElementById(`ip-${index}`);
+  const editContact = document.getElementById(`mp-${index}`);
   for (let i = 0; i < list.length; i++) {
     if (list[i].id == id) {
       console.log("id found");
-      list.splice(i, 1, { id: id, name: name.value, contact: contact.value });
+      list.splice(i, 1, {
+        id: id,
+        name: editName.value,
+        contact: editContact.value,
+      });
     }
   }
-  const createBtn = document.querySelector("#create-account");
-  const updateBtn = document.querySelector("#edit-account");
-  createBtn.style.display = "block";
-  updateBtn.style.display = "none";
+  // const createBtn = document.querySelector("#create-account");
+  // const updateBtn = document.querySelector("#edit-account");
+  // createBtn.style.display = "block";
+  // updateBtn.style.display = "none";
   name.value = "";
   contact.value = "";
   saveData();
+  editFlag = false;
+  editIndex = null;
   showData();
 }
 
@@ -197,5 +235,11 @@ function deleteData(id) {
     }
   }
   saveData();
+  showData();
+}
+
+function cancelData() {
+  editFlag = false;
+  editIndex = null;
   showData();
 }
