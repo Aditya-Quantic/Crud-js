@@ -109,12 +109,12 @@ function showData() {
     <td>${item.id}</td>
     <td>${
       editFlag && editIndex == index
-        ? `<input id='ip-${editIndex}' />`
+        ? `<input class="input" id='ip-${editIndex}' />`
         : item.name
     }</td>
     <td>${
       editFlag && editIndex == index
-        ? `<input id='mp-${editIndex}'/>`
+        ? `<input class="input" id='mp-${editIndex}'/>`
         : item.contact
     }</td>
     <td>
@@ -128,10 +128,10 @@ function showData() {
         ? `cancelData()`
         : `deleteData(${JSON.stringify(item.id)})`
     }'>${editFlag && editIndex == index ? "Cancel" : "Delete"}</button></td>
-    </tr>
-    `;
+    </tr>`;
   });
-  tbody.innerHTML = tableData;
+  console.log(tableData);
+  tbody.innerHTML = tableData.join("");
 }
 
 showData();
@@ -147,7 +147,7 @@ function createUser(event) {
   event.preventDefault();
   const name = document.querySelector("#name");
   const contact = document.querySelector("#contact");
-  const id = list.length + 1;
+  const id = new Date().getTime();
   const obj = {};
   console.log(obj);
 
